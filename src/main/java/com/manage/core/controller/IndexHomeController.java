@@ -1,14 +1,21 @@
 package com.manage.core.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.manage.core.entity.AdminUser;
+import com.manage.core.service.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 
@@ -19,23 +26,62 @@ import java.io.ByteArrayOutputStream;
 
 @Controller
 public class IndexHomeController {
+    private final AdminUserService adminUserService;
 
     private final DefaultKaptcha captchaProducer;
 
     @Autowired
-    public IndexHomeController(DefaultKaptcha captchaProducer) {
+    public IndexHomeController(DefaultKaptcha captchaProducer, AdminUserService adminUserService) {
         this.captchaProducer = captchaProducer;
+        this.adminUserService = adminUserService;
+    }
+
+
+    @GetMapping({"/login"})
+    public String login() {
+        return "admin/login";
+    }
+
+    @PostMapping(value = "/login")
+    public String login(@RequestParam("userName") String userName,
+                        @RequestParam("password") String password,
+                        @RequestParam("verifyCode") String verifyCode,
+                        HttpSession session) {
+        if (StringUtils.isEmpty(verifyCode)) {
+            session.setAttribute("errorMsg", "验证码不能为空");
+            return "admin/login";
+        }
+        if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
+            session.setAttribute("errorMsg", "用户名或密码不能为空");
+            return "admin/login";
+        }
+        String kaptchaCode = session.getAttribute("verifyCode") + "";
+        if (StringUtils.isEmpty(kaptchaCode) || !verifyCode.equals(kaptchaCode)) {
+            session.setAttribute("errorMsg", "验证码错误");
+            return "admin/login";
+        }
+//        AdminUser adminUser = adminUserService.login(userName, password);
+        AdminUser adminUser = new AdminUser(123, "dauxe", "123456", "王雪迪", (byte) 1);
+        if (adminUser != null) {
+            session.setAttribute("loginUser", adminUser.getNickName());
+            session.setAttribute("loginUserId", adminUser.getAdminUserId());
+            //session过期时间设置为7200秒 即两小时
+            //session.setMaxInactiveInterval(60 * 60 * 2);
+            return "redirect:/index";
+        } else {
+            session.setAttribute("errorMsg", "登陆失败");
+            return "admin/login";
+        }
     }
 
 
     /**
      * 首页
-     *
      * @return
      */
     @GetMapping({"/", "/index", "index.html"})
     public String index(HttpServletRequest request) {
-        return "admin/login";
+        return "admin/index";
     }
 
 
