@@ -14,8 +14,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CustomWebMvcConfigurer  implements WebMvcConfigurer {
 
+    private final AdminLoginInterceptor adminLoginInterceptor;
+
     @Autowired
-    private AdminLoginInterceptor adminLoginInterceptor;
+    public CustomWebMvcConfigurer(AdminLoginInterceptor adminLoginInterceptor) {
+        this.adminLoginInterceptor = adminLoginInterceptor;
+    }
 
 
     public void addInterceptors(InterceptorRegistry registry) {
