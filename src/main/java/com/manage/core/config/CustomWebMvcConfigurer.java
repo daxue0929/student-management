@@ -1,6 +1,6 @@
 package com.manage.core.config;
 
-import com.manage.core.interceptor.AdminLoginInterceptor;
+import com.manage.core.interceptor.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -14,19 +14,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CustomWebMvcConfigurer  implements WebMvcConfigurer {
 
-    private final AdminLoginInterceptor adminLoginInterceptor;
+    private final LoginInterceptor loginInterceptor;
 
     @Autowired
-    public CustomWebMvcConfigurer(AdminLoginInterceptor adminLoginInterceptor) {
-        this.adminLoginInterceptor = adminLoginInterceptor;
+    public CustomWebMvcConfigurer(LoginInterceptor loginInterceptor) {
+        this.loginInterceptor = loginInterceptor;
     }
 
 
     public void addInterceptors(InterceptorRegistry registry) {
-        // 添加一个拦截器，拦截以/admin为前缀的url路径
-        registry.addInterceptor(adminLoginInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/login")
                 .excludePathPatterns("/dist/**")
+                .excludePathPatterns("/common/kaptcha")
                 .excludePathPatterns("/plugins/**");
     }
 
