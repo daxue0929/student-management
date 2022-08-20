@@ -102,12 +102,13 @@ function validCN_ENString2_100(str) {
  * @returns {boolean}
  */
 function validPassword(password) {
-    var pattern = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$)^.{6,20}$/;
-    if (pattern.test(password.trim())) {
-        return (true);
-    } else {
-        return (false);
-    }
+    // var pattern = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$)^.{6,20}$/;
+    // if (pattern.test(password.trim())) {
+    //     return (true);
+    // } else {
+    //     return (false);
+    // }
+    return true;
 }
 
 <!-- 正则验证 end-->

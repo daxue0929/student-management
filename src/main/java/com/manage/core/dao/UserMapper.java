@@ -25,9 +25,11 @@ public interface UserMapper {
      */
     AdminUser login(@Param("username") String username, @Param("password") String password);
 
-    AdminUser selectByPrimaryKey(Integer adminUserId);
+    AdminUser selectByUserId(String userId);
 
     int updateByPrimaryKeySelective(AdminUser record);
 
     int updateByPrimaryKey(AdminUser record);
+
+    AdminUser selectByUsername(String username);
 }

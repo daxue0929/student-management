@@ -29,45 +29,50 @@ public class AdminUserService {
         System.out.println(uuid);
         return userMapper.login(userName, passwordMd5);
     }
-//
-//    @Override
-//    public AdminUser getUserDetailById(Integer loginUserId) {
-//        return adminUserMapper.selectByPrimaryKey(loginUserId);
-//    }
-//
-//    @Override
-//    public Boolean updatePassword(Integer loginUserId, String originalPassword, String newPassword) {
-//        AdminUser adminUser = adminUserMapper.selectByPrimaryKey(loginUserId);
-//        //当前用户非空才可以进行更改
-//        if (adminUser != null) {
-//            String originalPasswordMd5 = MD5Util.MD5Encode(originalPassword, "UTF-8");
-//            String newPasswordMd5 = MD5Util.MD5Encode(newPassword, "UTF-8");
-//            //比较原密码是否正确
-//            if (originalPasswordMd5.equals(adminUser.getLoginPassword())) {
-//                //设置新密码并修改
-//                adminUser.setLoginPassword(newPasswordMd5);
-//                if (adminUserMapper.updateByPrimaryKeySelective(adminUser) > 0) {
-//                    //修改成功则返回true
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public Boolean updateName(Integer loginUserId, String loginUserName, String nickName) {
-//        AdminUser adminUser = adminUserMapper.selectByPrimaryKey(loginUserId);
-//        //当前用户非空才可以进行更改
-//        if (adminUser != null) {
-//            //修改信息
-//            adminUser.setLoginUserName(loginUserName);
-//            adminUser.setNickName(nickName);
-//            if (adminUserMapper.updateByPrimaryKeySelective(adminUser) > 0) {
-//                //修改成功则返回true
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+
+
+    public AdminUser getUserByUserId(String userId) {
+        return userMapper.selectByUserId(userId);
+    }
+
+    public AdminUser getUserByUsername(String username) {
+        return userMapper.selectByUsername(username);
+    }
+
+
+
+    public Boolean updatePassword(String username, String originalPassword, String newPassword) {
+        AdminUser adminUser = userMapper.selectByUsername(username);
+        //当前用户非空才可以进行更改
+        if (adminUser != null) {
+            String originalPasswordMd5 = MD5Util.MD5Encode(originalPassword, "UTF-8");
+            String newPasswordMd5 = MD5Util.MD5Encode(newPassword, "UTF-8");
+            //比较原密码是否正确
+            if (originalPasswordMd5.equals(adminUser.getPassword())) {
+                //设置新密码并修改
+                adminUser.setPassword(newPasswordMd5);
+                if (userMapper.updateByPrimaryKeySelective(adminUser) > 0) {
+                    //修改成功则返回true
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public Boolean updateName(String username, String loginUserName, String nickName) {
+        AdminUser adminUser = userMapper.selectByUsername(username);
+        //当前用户非空才可以进行更改
+        if (adminUser != null) {
+            //修改信息
+            adminUser.setUsername(loginUserName);
+            adminUser.setNickName(nickName);
+            if (userMapper.updateByPrimaryKeySelective(adminUser) > 0) {
+                //修改成功则返回true
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -9,7 +9,7 @@ $(function () {
             var params = $("#userNameForm").serialize();
             $.ajax({
                 type: "POST",
-                url: "/admin/profile/name",
+                url: "/profile/name",
                 data: params,
                 success: function (r) {
                     if (r == 'success') {
@@ -33,7 +33,7 @@ $(function () {
             var params = $("#userPasswordForm").serialize();
             $.ajax({
                 type: "POST",
-                url: "/admin/profile/password",
+                url: "/profile/password",
                 data: params,
                 success: function (r) {
                     console.log(r);

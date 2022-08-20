@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -38,11 +39,6 @@ public class IndexHomeController {
         this.adminUserService = adminUserService;
     }
 
-
-    @GetMapping({"/login"})
-    public String login() {
-        return "admin/login";
-    }
 
     @PostMapping(value = "/login")
     public String login(@RequestParam("userName") String userName,
@@ -76,15 +72,6 @@ public class IndexHomeController {
     }
 
 
-    /**
-     * 首页
-     * @return
-     */
-    @GetMapping({"/", "/index", "index.html"})
-    public String index(HttpServletRequest request) {
-        return "admin/index";
-    }
-
 
     @GetMapping("/common/kaptcha")
     public void defaultKaptcha(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
@@ -111,6 +98,39 @@ public class IndexHomeController {
         responseOutputStream.close();
     }
 
+    @PostMapping("/profile/password")
+    @ResponseBody
+    public String passwordUpdate(HttpServletRequest request, @RequestParam("originalPassword") String originalPassword,
+                                 @RequestParam("newPassword") String newPassword) {
+        if (StringUtils.isEmpty(originalPassword) || StringUtils.isEmpty(newPassword)) {
+            return "参数不能为空";
+        }
+        String username = (String) request.getSession().getAttribute("loginUserId");
+        if (adminUserService.updatePassword(username, originalPassword, newPassword)) {
+            //修改成功后清空session中的数据，前端控制跳转至登录页
+            request.getSession().removeAttribute("loginUserId");
+            request.getSession().removeAttribute("loginUser");
+            request.getSession().removeAttribute("errorMsg");
+            return "success";
+        } else {
+            return "修改失败";
+        }
+    }
+
+    @PostMapping("/profile/name")
+    @ResponseBody
+    public String nameUpdate(HttpServletRequest request, @RequestParam("loginUserName") String loginUserName,
+                             @RequestParam("nickName") String nickName) {
+        if (StringUtils.isEmpty(loginUserName) || StringUtils.isEmpty(nickName)) {
+            return "参数不能为空";
+        }
+        String username = (String) request.getSession().getAttribute("loginUserId");
+        if (adminUserService.updateName(username, loginUserName, nickName)) {
+            return "success";
+        } else {
+            return "修改失败";
+        }
+    }
 
 
 
