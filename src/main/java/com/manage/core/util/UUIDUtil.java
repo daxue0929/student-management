@@ -10,4 +10,14 @@ public class UUIDUtil {
     public static final String getUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
+
+    public static void main(String[] args){
+
+        System.out.println(getUUID());
+        System.out.println(getUUID());
+        System.out.println(getUUID());
+        System.out.println(getUUID());
+        System.out.println(getUUID());
+        System.out.println(getUUID());
+    }
 }

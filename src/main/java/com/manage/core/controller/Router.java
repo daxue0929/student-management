@@ -2,6 +2,7 @@ package com.manage.core.controller;
 
 import com.manage.core.pojo.AdminUser;
 import com.manage.core.service.AdminUserService;
+import com.manage.core.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 public class Router {
 
     final AdminUserService adminUserService;
+    final ConfigService configService;
 
     @Autowired
-    public Router(AdminUserService adminUserService) {
+    public Router(AdminUserService adminUserService, ConfigService configService) {
         this.adminUserService = adminUserService;
+        this.configService = configService;
     }
 
 
@@ -60,6 +63,12 @@ public class Router {
     }
 
 
+    @GetMapping("/config")
+    public String list(HttpServletRequest request) {
+        request.setAttribute("path", "configurations");
+        request.setAttribute("configurations", configService.getAllConfigs());
+        return "admin/configuration";
+    }
 
 
 
